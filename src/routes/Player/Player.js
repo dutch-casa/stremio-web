@@ -547,6 +547,36 @@ const Player = ({ urlParams, queryParams }) => {
 
                     break;
                 }
+                case 'MediaPlayPause': {
+                    if (!menusOpen && !nextVideoPopupOpen && video.state.paused !== null) {
+                        event.preventDefault();
+                        if (video.state.paused) {
+                            onPlayRequested();
+                            setSeeking(false);
+                        } else {
+                            onPauseRequested();
+                        }
+                    }
+
+                    break;
+                }
+                case 'MediaPlay': {
+                    if (!menusOpen && !nextVideoPopupOpen && video.state.paused === true) {
+                        event.preventDefault();
+                        onPlayRequested();
+                        setSeeking(false);
+                    }
+
+                    break;
+                }
+                case 'MediaPause': {
+                    if (!menusOpen && !nextVideoPopupOpen && video.state.paused === false) {
+                        event.preventDefault();
+                        onPauseRequested();
+                    }
+
+                    break;
+                }
                 case 'ArrowRight': {
                     if (!menusOpen && !nextVideoPopupOpen && video.state.time !== null) {
                         const seekDuration = event.shiftKey ? settings.seekShortTimeDuration : settings.seekTimeDuration;

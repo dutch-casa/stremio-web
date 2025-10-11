@@ -11,7 +11,7 @@
         "build": "webpack --mode production",
         "test": "jest",
         "lint": "eslint src",
-        "scan-translations": "npx jest ./tests/i18nScan.test.js"
+        "scan-translations": "pnpx jest ./tests/i18nScan.test.js"
     },
     "dependencies": {
         "@babel/runtime": "7.26.0",
@@ -50,8 +50,8 @@
         "@babel/preset-env": "7.26.0",
         "@babel/preset-react": "7.26.3",
         "@eslint/js": "^9.16.0",
-        "@stylistic/eslint-plugin": "^2.11.0",
-        "@stylistic/eslint-plugin-jsx": "^2.11.0",
+        "@stylistic/eslint-plugin": "^5.4.0",
+        "@stylistic/eslint-plugin-jsx": "^4.4.1",
         "@types/hat": "^0.0.4",
         "@types/lodash.isequal": "^4.5.8",
         "@types/lodash.throttle": "^4.1.9",

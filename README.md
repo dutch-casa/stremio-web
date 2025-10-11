@@ -10,24 +10,31 @@ Stremio is a modern media center that's a one-stop solution for your video enter
 ### Prerequisites
 
 * Node.js 12 or higher
-* npm 6 or higher
+* [pnpm](https://pnpm.io/installation) 10 or higher
 
 ### Install dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Start development server
 
 ```bash
-npm start
+pnpm start
 ```
 
 ### Production build
 
 ```bash
-npm run build
+pnpm run build
+```
+
+### Run with Docker
+
+```bash
+docker build -t stremio-web .
+docker run -p 8080:8080 stremio-web
 ```
 
 ## Screenshots
