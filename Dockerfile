@@ -13,11 +13,13 @@ WORKDIR /var/www/stremio-web
 FROM base AS prebuild
 
 RUN apk update && apk upgrade && \
-    apk add --no-cache git
+    apk add --no-cache git \
+    && npm install -g pnpm
 WORKDIR /var/www/stremio-web
 COPY . .
-RUN npm install
-RUN npm run build
+ENV CI=true
+RUN pnpm install
+RUN pnpm run build
 
 # Bundle app source
 FROM base AS final
