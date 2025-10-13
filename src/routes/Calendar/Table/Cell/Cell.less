@@ -138,6 +138,17 @@
     }
 }
 
+@media only screen and (max-width: @minimum) and (orientation: portrait) {
+  .cell{
+    .items{
+        .item{
+            pointer-events: none;
+        }
+
+    }
+  }
+}
+
 @media @phone-portrait {
     .cell {
         flex-direction: column;
@@ -150,6 +161,7 @@
 
             .item {
                 width: 100%;
+                pointer-events: none;
             }
         }
     }
@@ -186,6 +198,12 @@
       position: relative;
       flex-direction: row;
       display: flex;
+
+      .items{
+          .item{
+              pointer-events: none;
+          }
+      }
 
       .heading {
           display: flex;
