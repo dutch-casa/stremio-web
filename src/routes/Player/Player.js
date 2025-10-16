@@ -8,7 +8,7 @@ const langs = require('langs');
 const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { onFileDrop, useSettings, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, CONSTANTS, useShell } = require('stremio/common');
+const { onFileDrop, useSettings, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, CONSTANTS, useShell, usePlatform } = require('stremio/common');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const BufferingLoader = require('./BufferingLoader');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
@@ -43,6 +43,7 @@ const Player = ({ urlParams, queryParams }) => {
     const statistics = useStatistics(player, streamingServer);
     const video = useVideo();
     const routeFocused = useRouteFocused();
+    const platform = usePlatform();
     const toast = useToast();
 
     const [seeking, setSeeking] = React.useState(false);
@@ -346,6 +347,7 @@ const Player = ({ urlParams, queryParams }) => {
                 maxAudioChannels: settings.surroundSound ? 32 : 2,
                 hardwareDecoding: settings.hardwareDecoding,
                 videoMode: settings.videoMode,
+                platform: platform.name,
                 streamingServerURL: streamingServer.baseUrl ?
                     casting ?
                         streamingServer.baseUrl
