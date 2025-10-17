@@ -2,6 +2,25 @@
 
 @import (reference) '~stremio/common/screen-sizes.less';
 
+.disable-cell-items() {
+    .cell {
+        .items {
+            .item {
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+.compact-items() {
+    .cell {
+        .items {
+            padding: 1px;
+            gap: 0.15rem;
+        }
+    }
+}
+
 .cell {
     position: relative;
     display: flex;
@@ -138,46 +157,25 @@
 }
 
 @media only screen and (max-width: @minimum) {
-    .cell {
-        .items {
-            .item {
-                pointer-events: none;
-            }
-        }
-    }
+    .disable-cell-items();
 }
 
 @media @phone-portrait {
     .cell {
         flex-direction: column;
         display: grid;
-
-        .items {
-            padding: 1px;
-            gap: 0.15rem;
-
-            .item {
-                pointer-events: none;
-            }
-        }
     }
+    .compact-items();
+    .disable-cell-items();
 }
 
 @media @phone-landscape {
     .cell {
         flex-direction: row;
-
-        .items {
-            padding: 1px;
-            gap: 0.15rem;
-
-            .item {
-                pointer-events: none;
-            }
-        }
     }
+    .compact-items();
+    .disable-cell-items();
 }
-
 
 @media only screen and (max-height: @medium) and (max-width: @medium) and (orientation: landscape) {
     .cell {
@@ -207,12 +205,10 @@
     }
 }
 
+@media screen and (max-width: @small) and (orientation: portrait) {
+    .disable-cell-items();
+}
+
 @media screen and (min-width: @small-phone-portrait-size) and (max-width: @small) and (orientation: portrait) {
-    .cell {
-        .items {
-            .item {
-                pointer-events: none;
-            }
-        }
-    }
+    .disable-cell-items();
 }
