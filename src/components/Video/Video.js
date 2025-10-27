@@ -75,6 +75,8 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
         React.useEffect(() => {
             selected && ref.current?.scrollIntoView({
                 behavior: 'smooth',
+                block: 'nearest',
+                inline: 'start'
             });
         }, [selected]);
 
