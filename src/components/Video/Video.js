@@ -73,7 +73,7 @@ const Video = ({ className, id, title, thumbnail, season, episode, released, upc
         const blurThumbnail = profile.settings.hideSpoilers && season && episode && !watched;
 
         React.useEffect(() => {
-            selected && ref.current?.scrollIntoView({
+            selected && !watched && ref.current?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'nearest',
                 inline: 'start'
