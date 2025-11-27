@@ -564,8 +564,8 @@ const Player = ({ urlParams, queryParams }) => {
     React.useEffect(() => {
         if (!navigator.mediaSession) return;
 
-        const metaItem = player.metaItem && player.metaItem.type === 'Ready' ? player.metaItem.content : null;
-        const videoId = player.selected ? player.selected.streamRequest.path.id : null;
+        const metaItem = player.metaItem && player.metaItem?.type === 'Ready' ? player.metaItem.content : null;
+        const videoId = player.selected ? player.selected?.streamRequest?.path?.id : null;
         const video = metaItem ? metaItem.videos.find(({ id }) => id === videoId) : null;
 
         const videoInfo = video && video.season && video.episode ? ` (${video.season}x${video.episode})`: null;
