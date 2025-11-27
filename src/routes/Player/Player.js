@@ -8,7 +8,7 @@ const langs = require('langs');
 const { useTranslation } = require('react-i18next');
 const { useRouteFocused } = require('stremio-router');
 const { useServices } = require('stremio/services');
-const { onFileDrop, useSettings, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, CONSTANTS, useShell, usePlatform } = require('stremio/common');
+const { onFileDrop, useSettings, useProfile, useFullscreen, useBinaryState, useToast, useStreamingServer, withCoreSuspender, CONSTANTS, useShell, usePlatform } = require('stremio/common');
 const { HorizontalNavBar, Transition, ContextMenu } = require('stremio/components');
 const BufferingLoader = require('./BufferingLoader');
 const VolumeChangeIndicator = require('./VolumeChangeIndicator');
@@ -36,7 +36,7 @@ const Player = ({ urlParams, queryParams }) => {
     const forceTranscoding = React.useMemo(() => {
         return queryParams.has('forceTranscoding');
     }, [queryParams]);
-
+    const profile = useProfile();
     const [player, videoParamsChanged, timeChanged, seek, pausedChanged, ended, nextVideo] = usePlayer(urlParams);
     const [settings, updateSettings] = useSettings();
     const streamingServer = useStreamingServer();
@@ -105,13 +105,27 @@ const Player = ({ urlParams, queryParams }) => {
         video.setProp('extraSubtitlesOutlineColor', settings.subtitlesOutlineColor);
     }, [settings.subtitlesSize, settings.subtitlesOffset, settings.subtitlesTextColor, settings.subtitlesBackgroundColor, settings.subtitlesOutlineColor]);
 
-    const handleNextVideoNavigation = React.useCallback((deepLinks) => {
-        if (deepLinks.player) {
-            isNavigating.current = true;
-            window.location.replace(deepLinks.player);
-        } else if (deepLinks.metaDetailsStreams) {
-            isNavigating.current = true;
-            window.location.replace(deepLinks.metaDetailsStreams);
+    const handleNextVideoNavigation = React.useCallback((deepLinks, bingeWatching, ended) => {
+        if (ended) {
+            if (bingeWatching) {
+                if (deepLinks.player) {
+                    isNavigating.current = true;
+                    window.location.replace(deepLinks.player);
+                } else if (deepLinks.metaDetailsStreams) {
+                    isNavigating.current = true;
+                    window.location.replace(deepLinks.metaDetailsStreams);
+                }
+            } else {
+                window.history.back();
+            }
+        } else {
+            if (deepLinks.player) {
+                isNavigating.current = true;
+                window.location.replace(deepLinks.player);
+            } else if (deepLinks.metaDetailsStreams) {
+                isNavigating.current = true;
+                window.location.replace(deepLinks.metaDetailsStreams);
+            }
         }
     }, []);
 
@@ -127,7 +141,8 @@ const Player = ({ urlParams, queryParams }) => {
             nextVideo();
 
             const deepLinks = window.playerNextVideo.deepLinks;
-            handleNextVideoNavigation(deepLinks);
+            handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, true);
+
         } else {
             window.history.back();
         }
@@ -257,9 +272,9 @@ const Player = ({ urlParams, queryParams }) => {
             nextVideo();
 
             const deepLinks = player.nextVideo.deepLinks;
-            handleNextVideoNavigation(deepLinks);
+            handleNextVideoNavigation(deepLinks, profile.settings.bingeWatching, false);
         }
-    }, [player.nextVideo, handleNextVideoNavigation]);
+    }, [player.nextVideo, handleNextVideoNavigation, profile.settings]);
 
     const onVideoClick = React.useCallback(() => {
         if (video.state.paused !== null) {
@@ -412,7 +427,7 @@ const Player = ({ urlParams, queryParams }) => {
     }, [video.state.videoParams]);
 
     React.useEffect(() => {
-        if (!!settings.bingeWatching && player.nextVideo !== null && !nextVideoPopupDismissed.current) {
+        if (player.nextVideo !== null && !nextVideoPopupDismissed.current) {
             if (video.state.time !== null && video.state.duration !== null && video.state.time < video.state.duration && (video.state.duration - video.state.time) <= settings.nextVideoNotificationDuration) {
                 openNextVideoPopup();
             } else {
