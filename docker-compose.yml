@@ -17,7 +17,7 @@ services:
       - "coolify.managed=true"
       - "coolify.service=stremio"
 
-  stremio-web:
+stremio-web:
     build: .
     expose:
       - "8080"
