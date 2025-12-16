@@ -72,10 +72,11 @@ Streaming server data (cache, etc.) is stored in a Docker volume `streaming-serv
 For Coolify deployment at `https://stream.dutch.casa`:
 
 **How it works:**
-- Coolify's proxy (Traefik/Caddy) handles HTTPS termination and routes `https://stream.dutch.casa` to the **nginx** service (port 80)
-- Nginx handles internal routing:
-  - `/streaming-server/` → stremio-streaming-server (port 11470)
-  - All other paths → stremio-web (port 8080)
+- Coolify's proxy (Traefik/Caddy) handles HTTPS termination and reverse proxying
+- Configure Coolify to route:
+  - Main domain (`stream.dutch.casa`) → `stremio-web` service (port 8080)
+  - Path `/streaming-server/` → `stremio-streaming-server` service (port 11470)
+- Both services are exposed directly - Coolify handles all routing and TLS termination
 - This ensures the streaming server is accessible via HTTPS under the same domain (no mixed-content issues)
 
 **Deployment steps:**
@@ -84,10 +85,9 @@ For Coolify deployment at `https://stream.dutch.casa`:
    - Create a new resource from docker-compose
    - Point it to this repository
    - **Important:** Set Coolify's git branch to match your repository's default branch (e.g., `main` or `master`)
-   - Set the domain to `stream.dutch.casa`
-   - **Important:** Configure Coolify to route traffic to the `nginx` service (port 80)
+   - Set the domain to `stream.dutch.casa` for the `stremio-web` service (port 8080)
+   - Configure a path route: `/streaming-server/` → `stremio-streaming-server` service (port 11470)
    - Coolify will automatically handle HTTPS/SSL certificates
-   - The nginx service builds from `Dockerfile.nginx` which includes the config (no bind mount issues)
 
 2. **After deployment, configure the streaming server URL:**
    - Option 1 (URL parameter): Visit `https://stream.dutch.casa/?streamingServerUrl=https://stream.dutch.casa/streaming-server/`
@@ -104,10 +104,8 @@ For Coolify deployment at `https://stream.dutch.casa`:
 **Troubleshooting:**
 - **Git branch mismatch:** Ensure Coolify's branch setting matches your repository's default branch (check in repository settings)
 - **Wrong image:** The streaming server uses `stremio/server:latest` (verified correct Docker Hub image)
-- **Nginx config:** Uses custom Dockerfile (`Dockerfile.nginx`) to avoid bind mount issues - config is baked into the image
-- If Coolify doesn't detect the nginx service, manually configure routing to point to the `nginx` service on port 80
+- **Service routing:** Configure Coolify to route the main domain to `stremio-web:8080` and `/streaming-server/` path to `stremio-streaming-server:11470`
 - If experiencing torrent connectivity issues, enable `privileged: true` in the stremio-streaming-server service
-- Ensure Coolify's proxy is forwarding `X-Forwarded-Proto` header (nginx config already handles this)
 
 ## Screenshots
 
