@@ -30,7 +30,7 @@ services:
       - "coolify.managed=true"
 
   stremio-streaming-server:
-    image: stremio/stremio-streaming-server:latest
+    image: stremio/server:latest
     expose:
       - "11470"
     volumes:
