@@ -82,10 +82,12 @@ For Coolify deployment at `https://stream.dutch.casa`:
 
 1. **In Coolify UI:**
    - Create a new resource from docker-compose
-   - Point it to this repository or upload `docker-compose.yml`
+   - Point it to this repository
+   - **Important:** Set Coolify's git branch to match your repository's default branch (e.g., `main` or `master`)
    - Set the domain to `stream.dutch.casa`
    - **Important:** Configure Coolify to route traffic to the `nginx` service (port 80)
    - Coolify will automatically handle HTTPS/SSL certificates
+   - The nginx service builds from `Dockerfile.nginx` which includes the config (no bind mount issues)
 
 2. **After deployment, configure the streaming server URL:**
    - Option 1 (URL parameter): Visit `https://stream.dutch.casa/?streamingServerUrl=https://stream.dutch.casa/streaming-server/`
@@ -100,6 +102,9 @@ For Coolify deployment at `https://stream.dutch.casa`:
    - Check browser console for any mixed-content warnings (should be none)
 
 **Troubleshooting:**
+- **Git branch mismatch:** Ensure Coolify's branch setting matches your repository's default branch (check in repository settings)
+- **Wrong image:** The streaming server uses `stremio/server:latest` (verified correct Docker Hub image)
+- **Nginx config:** Uses custom Dockerfile (`Dockerfile.nginx`) to avoid bind mount issues - config is baked into the image
 - If Coolify doesn't detect the nginx service, manually configure routing to point to the `nginx` service on port 80
 - If experiencing torrent connectivity issues, enable `privileged: true` in the stremio-streaming-server service
 - Ensure Coolify's proxy is forwarding `X-Forwarded-Proto` header (nginx config already handles this)

@@ -11,13 +11,11 @@ services:
     networks:
       - stremio-network
     restart: unless-stopped
-    # Coolify: This is the main service that Coolify should route traffic to
-    # Coolify will handle HTTPS termination and route https://stream.dutch.casa to this service
     labels:
       - "coolify.managed=true"
       - "coolify.service=stremio"
 
-stremio-web:
+  stremio-web:
     build: .
     expose:
       - "8080"
@@ -32,17 +30,12 @@ stremio-web:
     expose:
       - "11470"
     volumes:
-      - streaming-server-data:/root/.stremio-streaming-server
+      - streaming-server-data:/root/.stremio-server
     networks:
       - stremio-network
     restart: unless-stopped
     labels:
       - "coolify.managed=true"
-    # Note: May need privileged mode or network_mode: host for proper torrent access
-    # Uncomment if experiencing connectivity issues:
-    # privileged: true
-    # or
-    # network_mode: host
 
 networks:
   stremio-network:
